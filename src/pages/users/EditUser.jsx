@@ -11,6 +11,14 @@ const EditUser = () => {
     phoneNumber: "",
     picture: "",
   });
+  const [checkFirstName, setCheckFirstName] = useState(false);
+  const [checkLastName, setCheckLastName] = useState(false);
+  const [checkPhone, setCheckPhone] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [firstNameMessage, setFirstNameMessage] = useState("");
+  const [lastNameMessage, setLastNameMessage] = useState("");
+  const [phoneMessage, setPhoneMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
   const { userId } = useParams();
   const navigate = useNavigate();
   const getUser = async () => {
@@ -40,6 +48,46 @@ const EditUser = () => {
   useEffect(() => {
     getUser();
   }, []);
+
+  const cancelEditUser = () => {
+    navigate("/");
+  };
+  const resetInputs = () => {
+    setCheckFirstName(false);
+    setCheckLastName(false);
+    setCheckPhone(false);
+    setCheckEmail(false);
+  };
+  
+  const validateInputs = () => {
+    let emailRgx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (userInputs.firstName == "") {
+      setCheckFirstName(true);
+      setFirstNameMessage("Please Enter First Name");
+    } else if (userInputs.firstName.length <= 2) {
+      setCheckFirstName(true);
+      setFirstNameMessage("First Name Must Be More Than 2 Charcter");
+    } else if (userInputs.lastName == "") {
+      resetInputs();
+      setCheckLastName(true);
+      setLastNameMessage("Please Enter Last Name");
+    } else if (userInputs.lastName.length <= 2) {
+      resetInputs();
+      setCheckLastName(true);
+      setLastNameMessage("Last Name Must Be More Than 2 Charcter");
+    } else if (userInputs.phoneNumber == "") {
+      resetInputs();
+      setCheckPhone(true);
+      setPhoneMessage("Please Enter Phone Number");
+    } else if (userInputs.email == "" && !emailRgx.test(userInputs.email)) {
+      resetInputs();
+      setCheckEmail(true);
+      setEmailMessage("Please Enter a valid email");
+    } else {
+      resetInputs();
+      editUser();
+    }
+  };
 
   const editUser = async () => {
     try {
@@ -94,6 +142,9 @@ const EditUser = () => {
                   setUserInputs({ ...userInputs, firstName: e.target.value })
                 }
               />
+                 {checkFirstName && (
+                <div className="text-danger m-2">{firstNameMessage}</div>
+              )}
             </div>
             <div className="col">
               <input
@@ -106,6 +157,9 @@ const EditUser = () => {
                   setUserInputs({ ...userInputs, lastName: e.target.value })
                 }
               />
+                {checkLastName && (
+                <div className="text-danger m-2">{lastNameMessage}</div>
+              )}
             </div>
           </div>
           <div className="row mt-4">
@@ -120,6 +174,9 @@ const EditUser = () => {
                   setUserInputs({ ...userInputs, phoneNumber: e.target.value })
                 }
               />
+                {checkPhone && (
+                <div className="text-danger m-2">{phoneMessage}</div>
+              )}
             </div>
             <div className="col">
               <input
@@ -132,18 +189,22 @@ const EditUser = () => {
                   setUserInputs({ ...userInputs, picture: e.target.value })
                 }
               />
+                 {checkEmail && (
+                <div className="text-danger m-2">{emailMessage}</div>
+              )}
             </div>
             <div className="d-flex justify-content-between mt-5 mb-5">
               <button
                 className="btn btn-secondary"
                 style={{ borderRadius: "20px", width: "120px" }}
+                onClick={cancelEditUser}
               >
                 Cancel
               </button>
               <button
                 className="btn btn-primary "
                 style={{ borderRadius: "20px", width: "120px" }}
-                onClick={editUser}
+                onClick={validateInputs}
               >
                 Save
               </button>

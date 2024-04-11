@@ -4,8 +4,46 @@ import { FaRegEdit, FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import Pagination from "../../components/Pagination";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 
-const UsersList = ({ users, setUsers, getUsers }) => {
+const UsersList = () => {
+  const [searchFilter, setSerachFilter] = useState("");
+  const [users, setUsers] = useState([]);
+
+  const getUsers = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: `https://dummyapi.io/data/v1/user?limit=5&page=1`,
+        headers: {
+          "app-id": "6612ff8c851ab1cf2bb6990d",
+        },
+      });
+      const data = response.data.data;
+      setUsers(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSerach = async (event) => {
+    const searchValue = event.target.value;
+    setSerachFilter(searchValue);
+    const serchFilterResult = users.filter((user) => {
+      return user.firstName.includes(searchValue) || user.lastName.includes(searchValue)
+    });
+    console.log(searchValue);
+    console.log(serchFilterResult);
+    if (searchValue != "") {
+      setUsers(serchFilterResult);
+    } else {
+      let usersResults = await getUsers();
+    }
+  };
+  useEffect(() => {
+    getUsers();
+  }, []);
   const deleteUser = (user) => {
     Swal.fire({
       title: `Do you want to Delete ${user.firstName}`,
@@ -56,6 +94,8 @@ const UsersList = ({ users, setUsers, getUsers }) => {
             placeholder="Search By Name"
             aria-label="Search"
             style={{ width: "80%", borderRadius: "20px" }}
+            value={searchFilter}
+            onChange={(e) => handleSerach(e)}
           />
           <div className="mt-auto ">
             <Link
@@ -69,6 +109,8 @@ const UsersList = ({ users, setUsers, getUsers }) => {
             </Link>
           </div>
         </div>
+
+        {users.length == 0 && <div className="text-center m-5 text-white ">Not Found</div>}
         <div className="table-responsive">
           <table
             className="table mx-auto"
