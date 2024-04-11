@@ -110,7 +110,6 @@ const UsersList = () => {
           </div>
         </div>
 
-        {users.length == 0 && <div className="text-center m-5 text-white ">Not Found</div>}
         <div className="table-responsive">
           <table
             className="table mx-auto"
