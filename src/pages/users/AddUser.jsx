@@ -67,7 +67,7 @@ const AddUser = () => {
       resetInputs();
       setCheckPhone(true);
       setPhoneMessage("Please Enter Phone Number");
-    } else if (userInputs.email == "" && !emailRgx.test(userInputs.email)) {
+    } else if (userInputs.email == "" || !emailRgx.test(userInputs.email)) {
       resetInputs();
       setCheckEmail(true);
       setEmailMessage("Please Enter a valid email");
