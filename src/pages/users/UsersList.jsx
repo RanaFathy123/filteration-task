@@ -21,20 +21,20 @@ const UsersList = () => {
       });
       const data = response.data.data;
       setUsers(data);
-      return data;
+
     } catch (error) {
       console.log(error);
     }
   };
-
   const handleSerach = async (event) => {
     const searchValue = event.target.value;
     setSerachFilter(searchValue);
     const serchFilterResult = users.filter((user) => {
-      return user.firstName.includes(searchValue) || user.lastName.includes(searchValue)
+      return (
+        user.firstName.includes(searchValue) ||
+        user.lastName.includes(searchValue)
+      );
     });
-    console.log(searchValue);
-    console.log(serchFilterResult);
     if (searchValue != "") {
       setUsers(serchFilterResult);
     } else {
