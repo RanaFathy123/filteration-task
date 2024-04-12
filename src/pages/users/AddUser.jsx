@@ -12,14 +12,16 @@ const AddUser = () => {
     picture:
       "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
   });
+  const [userInputsMessage, setUserInputsMessage] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    picture: "",
+  });
   const [checkFirstName, setCheckFirstName] = useState(false);
   const [checkLastName, setCheckLastName] = useState(false);
   const [checkPhone, setCheckPhone] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
-  const [firstNameMessage, setFirstNameMessage] = useState("");
-  const [lastNameMessage, setLastNameMessage] = useState("");
-  const [phoneMessage, setPhoneMessage] = useState("");
-  const [emailMessage, setEmailMessage] = useState("");
   const navigate = useNavigate();
 
   const addUser = async () => {
@@ -51,26 +53,27 @@ const AddUser = () => {
     let emailRgx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (userInputs.firstName == "") {
       setCheckFirstName(true);
-      setFirstNameMessage("Please Enter First Name");
+      setUserInputsMessage({...userInputsMessage,firstName:'Please Fill First Name'});
     } else if (userInputs.firstName.length <= 2) {
       setCheckFirstName(true);
-      setFirstNameMessage("First Name Must Be More Than 2 Charcter");
+      setUserInputsMessage({...userInputsMessage,firstName:'First Name Must Be More Than 2 Charcter'});
     } else if (userInputs.lastName == "") {
       resetInputs();
       setCheckLastName(true);
-      setLastNameMessage("Please Enter Last Name");
+      setUserInputsMessage({...userInputsMessage,lastName:'Please Fill Last Name'});
     } else if (userInputs.lastName.length <= 2) {
       resetInputs();
       setCheckLastName(true);
-      setLastNameMessage("Last Name Must Be More Than 2 Charcter");
+      setUserInputsMessage({...userInputsMessage,lastName:'Last Name Must Be More Than 2 Charcter'});
+  
     } else if (userInputs.phoneNumber == "") {
       resetInputs();
       setCheckPhone(true);
-      setPhoneMessage("Please Enter Phone Number");
-    } else if (userInputs.email == "" || !emailRgx.test(userInputs.email)) {
+      setUserInputsMessage({...userInputsMessage,phoneNumber:'Please Enter Phone Number'});
+    } else if (userInputs.email == "" && !emailRgx.test(userInputs.email)) {
       resetInputs();
       setCheckEmail(true);
-      setEmailMessage("Please Enter a valid email");
+      setUserInputsMessage({...userInputsMessage,email:'Please Enter a valid email'});
     } else {
       resetInputs();
       addUser();
@@ -109,7 +112,7 @@ const AddUser = () => {
                 }
               />
               {checkFirstName && (
-                <div className="text-danger m-2">{firstNameMessage}</div>
+                <div className="text-danger m-2">{userInputsMessage.firstName}</div>
               )}
             </div>
             <div className="col">
@@ -124,7 +127,7 @@ const AddUser = () => {
                 }
               />
               {checkLastName && (
-                <div className="text-danger m-2">{lastNameMessage}</div>
+                <div className="text-danger m-2">{userInputsMessage.lastName}</div>
               )}
             </div>
           </div>
@@ -141,7 +144,7 @@ const AddUser = () => {
                 }
               />
               {checkPhone && (
-                <div className="text-danger m-2">{phoneMessage}</div>
+                <div className="text-danger m-2">{userInputsMessage.phoneNumber}</div>
               )}
             </div>
             <div className="col">
@@ -156,7 +159,7 @@ const AddUser = () => {
                 }
               />
               {checkEmail && (
-                <div className="text-danger m-2">{emailMessage}</div>
+                <div className="text-danger m-2">{userInputsMessage.email}</div>
               )}
             </div>
             <div className="d-flex justify-content-between mt-5 mb-5">
